@@ -46,10 +46,9 @@ public class ConexaoBanco {
     public Connection getConnectionFirebird() throws ClassNotFoundException, SQLException{
         Class.forName("org.firebirdsql.jdbc.FBDriver");
         //return DriverManager.getConnection("jdbc:firebirdsql:localhost/3050:C:/Projetos/dbfirebird/BDSGR.FDB", "sysdba","masterkey");     
-        return DriverManager.getConnection("jdbc:firebirdsql:"+this.IpBanco+"/"+this.PortaBanco+":"+this.FbCaminhoBanco, this.User,this.Password);     
-        
-        
+        return DriverManager.getConnection("jdbc:firebirdsql:"+this.IpBanco+"/"+this.PortaBanco+":"+this.FbCaminhoBanco, this.User,this.Password);             
     }
+
     
     /**
      * Saida de status de conexao ao banco.
