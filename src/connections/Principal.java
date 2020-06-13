@@ -15,15 +15,17 @@ import gui.FrPrincipal;
 public class Principal {
     public static void main(String[] args) throws ClassNotFoundException {
         System.out.println("Painel de conexões !");
-     /*   FrPrincipal obj = new FrPrincipal();
+       /* FrPrincipal obj = new FrPrincipal();
         obj.setVisible(true);*/
         ConexaoBanco obj = new ConexaoBanco();
-        obj.setInfoFirebird("localhost", "3052", "C:/Projetos/dbfirebird/BDSGR.FDB", "sysdba", "masterkey");
-        if(obj.ConexaoFirebird() == 1){
-            System.out.println("Conectado ao banco firebird");
+        obj.setInfoDB("10.0.0.9", "3306", "testedb", "root", "123456789", 2);
+    //   obj.setInfoDB("localhost", "1521", "xe", "system", "tech2020", 3);
+        if(obj.TesteConexao()){
+            System.out.println(obj.getMessageStatus());
         }
-        else{
-            System.out.println("Não conectado ao banco firebird");
+        else
+        {
+            System.out.println(obj.getMessageStatus());
         }
     }
     
