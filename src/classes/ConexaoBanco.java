@@ -108,47 +108,58 @@ public class ConexaoBanco {
         boolean status = false;
         
         switch(this.IdBanco){
-            case 1 :{
+            case 1 :
+            {
                 try 
                 {
                     getConnectionFirebird();
                     status = true;
                     //this.MessageStatus = "Conectado ao banco Firebird ";
-                    setMessageStatus("Conectado ao banco Firebird ");
+                    setMessageStatus("Conectado");
                 } 
                 catch (SQLException ex) 
                 {
                     Logger.getLogger(ConexaoBanco.class.getName()).log(Level.SEVERE, null, ex);
-                    setMessageStatus("Não conectado ao banco : " + ex.getMessage());
+                    setMessageStatus("Não conectado");
                 }                
             }break;
-            case 2:{
+            case 2:
+            {
                 try
                 {
                     getConnectionMySQL();
                     status = true;
                     //this.MessageStatus = "Conectado ao banco MySQL"; 
-                    setMessageStatus("Conectado ao banco MySQL ");
+                    setMessageStatus("Conectado");
                 }catch(SQLException ex)
                 {
                     Logger.getLogger(ConexaoBanco.class.getName()).log(Level.SEVERE, null, ex);
-                    setMessageStatus("Não conectado ao banco ! \n Erro : "+ ex.getMessage());
+                    setMessageStatus("Não conectado");
                 }                
             }break;
-            case 3:{
+            case 3:
+            {
                 try{
                     getConnectionOracle();
                     status = true;
                     //this.MessageStatus = "Conectado ao banco Oracle";
-                    setMessageStatus("Conectado ao banco Oracle");
+                    setMessageStatus("Conectado");
                 }catch(SQLException ex){
                     Logger.getLogger(ConexaoBanco.class.getName()).log(Level.SEVERE, null, ex);
-                    setMessageStatus("Não conectado ao banco ! \n : "+ex.getMessage());
+                    setMessageStatus("Não conectado");
                 }                
             }
         }
         
         return status;
+    }
+    
+    public void Desconectar() throws ClassNotFoundException, SQLException{
+        getConnectionMySQL().close();
+        if(getConnectionMySQL().isClosed())
+        {
+            System.out.println("Desconectado");
+        }
     }
     
 }
