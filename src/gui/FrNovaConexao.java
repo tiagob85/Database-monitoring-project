@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -58,11 +59,11 @@ public class FrNovaConexao extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         TxtUsuario = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        TxtSenha = new javax.swing.JTextField();
         BtnConfirmar = new javax.swing.JButton();
         BtnCancelar = new javax.swing.JButton();
+        TxtSenha = new javax.swing.JPasswordField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nova Conexão");
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -96,8 +97,6 @@ public class FrNovaConexao extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel6.setText("Senha:");
-
-        TxtSenha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         BtnConfirmar.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         BtnConfirmar.setText("Confirmar");
@@ -139,9 +138,9 @@ public class FrNovaConexao extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(TxtDescricao)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(TxtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
-                                    .addComponent(TxtSenha))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(TxtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(TxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -178,9 +177,9 @@ public class FrNovaConexao extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(TxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(BtnConfirmar, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(BtnConfirmar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(BtnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -190,13 +189,21 @@ public class FrNovaConexao extends javax.swing.JFrame {
 
     private void BtnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnConfirmarActionPerformed
         // TODO add your handling code here:
-        if(frPrincipal != null){
-            frPrincipal.recebeDados(TxtNomeConexao.getText(),CbNomeBanco.getSelectedIndex(),TxtPorta.getText(), TxtIP.getText(), TxtUsuario.getText(), TxtSenha.getText());
+        if(!TxtNomeConexao.getText().equals("")&&!(CbNomeBanco.getSelectedIndex()==0)
+                ||!TxtPorta.getText().equals("")&&!TxtIP.getText().equals("")||!TxtDescricao.getText().equals("")
+                ||!TxtUsuario.getText().equals("")&&!TxtSenha.getText().equals(""))
+        {
+            if(frPrincipal != null){
+                frPrincipal.recebeDados(TxtNomeConexao.getText(),CbNomeBanco.getSelectedIndex(),TxtDescricao.getText(),TxtPorta.getText(), TxtIP.getText(), TxtUsuario.getText(), TxtSenha.getText());
+            }
+            this.dispose();
+            TxtNomeConexao.setText("");
+            CbNomeBanco.setSelectedIndex(0);
         }
-        System.out.println(String.valueOf(CbNomeBanco.getSelectedIndex()));
-        this.dispose();
-        TxtNomeConexao.setText("");
-        CbNomeBanco.setSelectedIndex(0);
+        else
+        {
+            JOptionPane.showMessageDialog(null,"Dados incorretos ou não preenchidos !","Erro",JOptionPane.ERROR_MESSAGE); 
+        }
     }//GEN-LAST:event_BtnConfirmarActionPerformed
 
     
@@ -239,7 +246,6 @@ public class FrNovaConexao extends javax.swing.JFrame {
         });
     }*/
     
-    public String informacao = null;
     private FrPrincipal frPrincipal;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnCancelar;
@@ -249,7 +255,7 @@ public class FrNovaConexao extends javax.swing.JFrame {
     private javax.swing.JTextField TxtIP;
     private javax.swing.JTextField TxtNomeConexao;
     private javax.swing.JTextField TxtPorta;
-    private javax.swing.JTextField TxtSenha;
+    private javax.swing.JPasswordField TxtSenha;
     private javax.swing.JTextField TxtUsuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

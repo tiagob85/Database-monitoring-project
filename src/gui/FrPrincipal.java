@@ -45,6 +45,7 @@ public class FrPrincipal extends javax.swing.JFrame {
         initComponents();
     //    f = new JFrame("frame");
        // IniciaFrame();
+        setTitle("Monitoramento de conexão");
         objFrConexao = new FrNovaConexao();
     }
     
@@ -81,9 +82,14 @@ public class FrPrincipal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        JDesktop.setToolTipText("teste");
+        JDesktop.setName("Teste"); // NOI18N
 
         javax.swing.GroupLayout JDesktopLayout = new javax.swing.GroupLayout(JDesktop);
         JDesktop.setLayout(JDesktopLayout);
@@ -96,9 +102,9 @@ public class FrPrincipal extends javax.swing.JFrame {
             .addGap(0, 626, Short.MAX_VALUE)
         );
 
-        jMenu1.setText("Arquivo");
+        jMenu1.setText("Opções");
 
-        jMenuItem1.setText("Novo Frame");
+        jMenuItem1.setText("Nova conexão");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -106,9 +112,25 @@ public class FrPrincipal extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuItem2.setText("Credenciais");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem3.setText("Sair");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Novo");
+        jMenu2.setText("Sobre");
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -123,6 +145,9 @@ public class FrPrincipal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(JDesktop)
         );
+
+        JDesktop.getAccessibleContext().setAccessibleName("Teste");
+        JDesktop.getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -144,6 +169,17 @@ public class FrPrincipal extends javax.swing.JFrame {
         objFrConexao.enviaDados(this);
        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        objCredenciais = new FrCredenciais();
+        objCredenciais.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,7 +216,7 @@ public class FrPrincipal extends javax.swing.JFrame {
         });
     }*/
     
-    public void criaInternalFrame(String nomedaconexao, int idbanco, String porta, String ip, String usuario, String senha){
+    public void criaInternalFrame(String nomedaconexao, int idbanco, String descricao, String porta, String ip, String usuario, String senha){
     //Adicionando frame interno.              
         contador = contador+1;
         IniciaFrame(nomedaconexao);
@@ -217,8 +253,9 @@ public class FrPrincipal extends javax.swing.JFrame {
                     buttonConexao.setText("Desconectar");
                     status = 0;
                     obj = new ConexaoBanco();
-                    obj.setInfoDB("10.0.0.9", "3306", "testedb", "root", "123456789", 2);
-
+                   // obj.setInfoDB("10.0.0.9", "3306", "testedb", "root", "123456789", 2);
+                    obj.setInfoDB(ip, porta, descricao, usuario, senha, idbanco);
+                    
                     TimerTask repeatedTask = new TimerTask() 
                     {
                         @Override
@@ -285,9 +322,9 @@ public class FrPrincipal extends javax.swing.JFrame {
         
     }//metodo criaInternalFrame.
     
-    public void recebeDados(String nomedaconexao, int idbanco, String porta, String ip, String usuario, String senha){
+    public void recebeDados(String nomedaconexao, int idbanco, String descricao, String porta, String ip, String usuario, String senha){
         nome = nomedaconexao;
-        criaInternalFrame(nomedaconexao, idbanco, porta, ip, usuario, senha);
+        criaInternalFrame(nomedaconexao, idbanco, descricao, porta, ip, usuario, senha);
         System.out.println(nome);
     }
     
@@ -295,6 +332,7 @@ public class FrPrincipal extends javax.swing.JFrame {
         return nome;
     }
     
+    public FrCredenciais objCredenciais;
     public FrNovaConexao objFrConexao;
     String NomeForm = "";
     ConexaoBanco obj;
@@ -307,5 +345,7 @@ public class FrPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     // End of variables declaration//GEN-END:variables
 }
