@@ -5,6 +5,13 @@
  */
 package gui;
 
+import classes.Credencial;
+import classes.DBOperacoes;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Tiago B
@@ -14,8 +21,10 @@ public class FrCadCredencial extends javax.swing.JFrame {
     /**
      * Creates new form FrCadCredencial
      */
-    public FrCadCredencial() {
+    public FrCadCredencial() throws ClassNotFoundException, SQLException {
         initComponents();
+        objOperacoes = new DBOperacoes();
+        objCredencial = new Credencial();
     }
 
     /**
@@ -31,8 +40,8 @@ public class FrCadCredencial extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         TxtNomeCredencial = new javax.swing.JTextField();
-        TxtUsuario = new javax.swing.JTextField();
-        TxtSenha = new javax.swing.JPasswordField();
+        TxtUsuarioCredencial = new javax.swing.JTextField();
+        TxtSenhaCredencial = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -50,12 +59,16 @@ public class FrCadCredencial extends javax.swing.JFrame {
 
         TxtNomeCredencial.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
-        TxtUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        TxtUsuarioCredencial.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
-        TxtSenha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        TxtSenha.setText("jPasswordField1");
+        TxtSenhaCredencial.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         jButton1.setText("Gravar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cancelar");
 
@@ -72,8 +85,8 @@ public class FrCadCredencial extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TxtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(TxtUsuarioCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TxtSenhaCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jLabel1)
@@ -95,11 +108,11 @@ public class FrCadCredencial extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(TxtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TxtUsuarioCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(TxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TxtSenhaCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -110,6 +123,53 @@ public class FrCadCredencial extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+        if(!TxtNomeCredencial.getText().equals("") && !TxtUsuarioCredencial.getText().equals("")
+                &&!TxtSenhaCredencial.getText().equals(""))
+        {
+            objCredencial.setNome(TxtNomeCredencial.getText());
+            objCredencial.setUsuario(TxtUsuarioCredencial.getText());
+            objCredencial.setSenha(TxtSenhaCredencial.getText());            
+            
+            if(objOperacoes.insertDadosCredenciais(objCredencial))
+            {
+                JOptionPane.showMessageDialog(null,"Dados gravados inseridos com sucesso !","Informação",JOptionPane.INFORMATION_MESSAGE); 
+                limpaComponentes();
+                if(objFrCredenciais != null){
+                    try {
+                        objFrCredenciais.atualizaGrid(true);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(FrCadCredencial.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(FrCadCredencial.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                this.dispose();
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Erro ao gravar as informações !","Erro",JOptionPane.ERROR_MESSAGE); 
+                limpaComponentes();
+            }            
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"Dados incorretos ou não preenchidos !","Erro",JOptionPane.ERROR_MESSAGE);
+            limpaComponentes();
+        }   
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public void limpaComponentes(){
+        TxtNomeCredencial.setText("");
+        TxtUsuarioCredencial.setText("");
+        TxtSenhaCredencial.setText("");
+    }
+    
+    
+    public void enviarDados(FrCredenciais frcredenciais){
+        this.objFrCredenciais = frcredenciais;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -145,10 +205,13 @@ public class FrCadCredencial extends javax.swing.JFrame {
         });
     }*/
 
+    FrCredenciais objFrCredenciais;
+    DBOperacoes objOperacoes;
+    Credencial objCredencial;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField TxtNomeCredencial;
-    private javax.swing.JPasswordField TxtSenha;
-    private javax.swing.JTextField TxtUsuario;
+    private javax.swing.JPasswordField TxtSenhaCredencial;
+    private javax.swing.JTextField TxtUsuarioCredencial;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;

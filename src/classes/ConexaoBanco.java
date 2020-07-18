@@ -25,6 +25,7 @@ public class ConexaoBanco {
     String MessageStatus;
     int IdBanco;
     String NomeBanco;
+    String UrlBanco;
     
     public ConexaoBanco()
     {
@@ -90,6 +91,14 @@ public class ConexaoBanco {
         Class.forName("oracle.jdbc.driver.OracleDriver");
         //return DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","system", "tech2020");
         return DriverManager.getConnection("jdbc:oracle:thin:@"+this.IpBanco+":"+this.PortaBanco+":"+this.DescricaoDB+"",this.User, this.Password);
+    }
+    
+    /**
+     * Banco SQLite -- Salvar credenciais
+     */
+    public Connection getConnectionSQLite() throws ClassNotFoundException, SQLException{
+        Class.forName("org.sqlite.JDBC");
+        return DriverManager.getConnection("jdbc:sqlite:C:\\Projetos\\dbsqlite\\dbcredencial.db");
     }
     
     /**

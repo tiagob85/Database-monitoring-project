@@ -6,6 +6,7 @@
 package gui;
 
 import classes.ConexaoBanco;
+import classes.DBOperacoes;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
@@ -15,9 +16,13 @@ import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -33,8 +38,14 @@ public class FrNovaConexao extends javax.swing.JFrame {
     /**
      * Creates new form FrNovaConexao
      */
-    public FrNovaConexao() {
+    public FrNovaConexao() throws ClassNotFoundException, SQLException {
         initComponents();
+        
+        objOperacoes = new DBOperacoes();  
+        objOperacoes.RetornaDados();
+        DefaultComboBoxModel defaultComboBox = new DefaultComboBoxModel(objOperacoes.retornaCredencialCombo().toArray());
+        CmbCredencial.setModel(defaultComboBox);
+        CmbCredencial.setEnabled(false);
     }
 
     
@@ -62,6 +73,8 @@ public class FrNovaConexao extends javax.swing.JFrame {
         BtnConfirmar = new javax.swing.JButton();
         BtnCancelar = new javax.swing.JButton();
         TxtSenha = new javax.swing.JPasswordField();
+        ChkCarregaCredencial = new javax.swing.JCheckBox();
+        CmbCredencial = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nova Conexão");
@@ -108,47 +121,74 @@ public class FrNovaConexao extends javax.swing.JFrame {
 
         BtnCancelar.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         BtnCancelar.setText("Cancelar");
+        BtnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnCancelarActionPerformed(evt);
+            }
+        });
+
+        ChkCarregaCredencial.setText("Carregar credenciais");
+        ChkCarregaCredencial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChkCarregaCredencialActionPerformed(evt);
+            }
+        });
+
+        CmbCredencial.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TxtIP, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TxtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(CbNomeBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TxtNomeConexao))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TxtDescricao)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(TxtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(BtnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(BtnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TxtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(BtnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(BtnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ChkCarregaCredencial)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(TxtIP, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(jLabel3)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(TxtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(CbNomeBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel1)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(TxtNomeConexao))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel4)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(TxtDescricao)))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(TxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(CmbCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,18 +210,22 @@ public class FrNovaConexao extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(TxtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addComponent(ChkCarregaCredencial)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(TxtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(TxtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
+                .addComponent(CmbCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(BtnConfirmar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(BtnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(BtnCancelar))
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -189,12 +233,29 @@ public class FrNovaConexao extends javax.swing.JFrame {
 
     private void BtnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnConfirmarActionPerformed
         // TODO add your handling code here:
+        String[] credencial = null;
+        credencial = new String[2];
         if(!TxtNomeConexao.getText().equals("")&&!(CbNomeBanco.getSelectedIndex()==0)
                 ||!TxtPorta.getText().equals("")&&!TxtIP.getText().equals("")||!TxtDescricao.getText().equals("")
                 ||!TxtUsuario.getText().equals("")&&!TxtSenha.getText().equals(""))
         {
             if(frPrincipal != null){
-                frPrincipal.recebeDados(TxtNomeConexao.getText(),CbNomeBanco.getSelectedIndex(),TxtDescricao.getText(),TxtPorta.getText(), TxtIP.getText(), TxtUsuario.getText(), TxtSenha.getText());
+                if(ChkCarregaCredencial.isSelected()){
+                    try 
+                    {
+                        credencial = objOperacoes.retornaCredencial(CmbCredencial.getSelectedItem().toString());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(FrNovaConexao.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    frPrincipal.recebeDados(TxtNomeConexao.getText(),CbNomeBanco.getSelectedIndex(),TxtDescricao.getText(),TxtPorta.getText(), TxtIP.getText(), credencial[0], credencial[1]);  
+                    limpaComponentes();                    
+                }
+                else
+                {
+                    frPrincipal.recebeDados(TxtNomeConexao.getText(),CbNomeBanco.getSelectedIndex(),TxtDescricao.getText(),TxtPorta.getText(), TxtIP.getText(), TxtUsuario.getText(), TxtSenha.getText());   
+                     limpaComponentes();
+                }
+                //limpaComponentes();
             }
             this.dispose();
             TxtNomeConexao.setText("");
@@ -203,9 +264,57 @@ public class FrNovaConexao extends javax.swing.JFrame {
         else
         {
             JOptionPane.showMessageDialog(null,"Dados incorretos ou não preenchidos !","Erro",JOptionPane.ERROR_MESSAGE); 
+            limpaComponentes();
         }
     }//GEN-LAST:event_BtnConfirmarActionPerformed
 
+    private void ChkCarregaCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkCarregaCredencialActionPerformed
+        // TODO add your handling code here:
+        if(ChkCarregaCredencial.isSelected())
+        {
+            TxtUsuario.setEnabled(false);
+            TxtSenha.setEnabled(false);
+            TxtUsuario.setText("");
+            TxtSenha.setText("");
+            DefaultComboBoxModel defaultComboBox = null;
+            try {
+                defaultComboBox = new DefaultComboBoxModel(objOperacoes.retornaCredencialCombo().toArray());
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FrNovaConexao.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FrNovaConexao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            CmbCredencial.setModel(defaultComboBox);
+            CmbCredencial.setEnabled(true);
+        }
+        else
+        {
+            TxtUsuario.setEnabled(true);
+            TxtSenha.setEnabled(true);
+            CmbCredencial.setEnabled(false);
+        }
+    }//GEN-LAST:event_ChkCarregaCredencialActionPerformed
+
+    private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
+        // TODO add your handling code here:
+        limpaComponentes();
+        this.dispose();
+    }//GEN-LAST:event_BtnCancelarActionPerformed
+
+    public void verificaChecklist(){
+    }
+    
+    public void limpaComponentes(){
+        /** Limpar componentes*/
+        TxtNomeConexao.setText("");
+        CbNomeBanco.setSelectedIndex(0);
+        CmbCredencial.setSelectedIndex(0);
+        TxtDescricao.setText("");
+        TxtPorta.setText("");
+        TxtIP.setText("");
+        TxtUsuario.setText("");
+        TxtSenha.setText("");        
+    }//Limpar componentes
     
     public void enviaDados(FrPrincipal framePrincipal){
         this.frPrincipal = framePrincipal;
@@ -246,11 +355,14 @@ public class FrNovaConexao extends javax.swing.JFrame {
         });
     }*/
     
+    DBOperacoes objOperacoes;
     private FrPrincipal frPrincipal;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnCancelar;
     private javax.swing.JButton BtnConfirmar;
     private javax.swing.JComboBox<String> CbNomeBanco;
+    private javax.swing.JCheckBox ChkCarregaCredencial;
+    private javax.swing.JComboBox<String> CmbCredencial;
     private javax.swing.JTextField TxtDescricao;
     private javax.swing.JTextField TxtIP;
     private javax.swing.JTextField TxtNomeConexao;

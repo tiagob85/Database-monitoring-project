@@ -41,7 +41,7 @@ public class FrPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form FrPrincipal
      */
-    public FrPrincipal() {
+    public FrPrincipal() throws ClassNotFoundException, SQLException {
         initComponents();
     //    f = new JFrame("frame");
        // IniciaFrame();
@@ -155,7 +155,13 @@ public class FrPrincipal extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here: 
         if(objFrConexao == null){
-            objFrConexao = new FrNovaConexao();
+            try {
+                objFrConexao = new FrNovaConexao();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FrPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FrPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
             objFrConexao.setLocationRelativeTo(null);
             objFrConexao.setVisible(true);   
             objFrConexao.setResizable(false);
@@ -176,8 +182,14 @@ public class FrPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
-        objCredenciais = new FrCredenciais();
+        try {
+            // TODO add your handling code here:
+            objCredenciais = new FrCredenciais();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FrPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         objCredenciais.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
